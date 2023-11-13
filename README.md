@@ -1,6 +1,6 @@
 # NoteBook FanControl GUI
 
-This is a frontend written in python and GTK for nbf-linux
+This is a frontend written in python and GTK for nbfc-linux.
 
 For now, you can only set the fan speed to auto or percentage.
 
