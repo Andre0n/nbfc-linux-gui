@@ -11,7 +11,7 @@ For now, you can only set the fan speed to auto or percentage.
 Clone the project
 
 ```bash
-  git clone https://github.com/Andreon/nbfc-linux-gui
+  git clone https://github.com/Andre0n/nbfc-linux-gui
 ```
 
 Go to the project directory
