@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "nbfc-linux-gui"
+version = "0.1.0"
+description = "A frontend to nbfc-linux"
+license = "LGPL3"
+authors = ["Andre0n <andreon098@gmail.com>"]
+readme = "README.md"
+
+[project.urls]
+repository = "https://github.com/Andre0n/nbfc-linux-gui"
+
+[project.scripts]
+nbfc_linux_gui = "nbfc_linux_gui.main:main"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+vext = "^0.7.6"
+vext-gi = "^0.7.4"
+
+
+[tool.poetry.group.dev.dependencies]
+blue = "^0.9.1"
+isort = "^5.12.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
