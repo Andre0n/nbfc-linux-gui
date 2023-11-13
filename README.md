@@ -2,7 +2,7 @@
 
 This is a frontend written in Python and GTK for nbfc-linux.
 
-For now, you can only set the fan speed to auto or percentage.
+Currently, the frontend allows you to configure the fan speed, providing options for both automatic control and manual adjustments based on percentage settings.
 
 ![Screenshot of the program](/assets/main.png "Screenshot of the program")
 
