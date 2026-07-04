@@ -45,7 +45,6 @@ class FanWidget(Gtk.DrawingArea):
     def set_speed(self, percent: float) -> None:
         """percent 0-100 -> rotation velocity. 0 stops, 100 spins fast."""
         self.percent = max(0.0, min(percent, 100))
-        # ponytail: linear map, tune MAX_DEG_PER_SEC if it looks too fast/slow
         self.deg_per_sec = self.percent / 100 * self.MAX_DEG_PER_SEC
 
     def _on_tick(self, _widget: Gtk.Widget, frame_clock: Gdk.FrameClock) -> bool:

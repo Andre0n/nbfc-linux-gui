@@ -28,8 +28,6 @@ CSS = """
 
 class MainWindow(Adw.ApplicationWindow):
 
-    is_current_active = False
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.set_default_size(360, 480)
@@ -170,7 +168,6 @@ class MainWindow(Adw.ApplicationWindow):
             return  # nbfc unavailable: keep defaults
 
         auto = status.get('Auto Control Enabled', '').lower() == 'true'
-        self.is_current_active = auto
         self.modes.set_mode('auto' if auto else 'custom')
 
         speed = status.get('Current Fan Speed') or status.get('Target Fan Speed')
@@ -192,5 +189,4 @@ class MainWindow(Adw.ApplicationWindow):
         if err:
             self.status_label.set_label(_('Error: {}').format(err))
             return
-        self.is_current_active = (mode == 'auto')
         self.status_label.set_label(_MODE_SUBTITLE.get(mode, ''))
