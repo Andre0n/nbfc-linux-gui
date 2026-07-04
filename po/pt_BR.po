@@ -1,0 +1,37 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: nbfc-linux-gui\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Fan Control"
+msgstr "Controle do Ventilador"
+
+msgid "Automatic"
+msgstr "Automático"
+
+msgid "Maximum"
+msgstr "Máximo"
+
+msgid "Manual"
+msgstr "Manual"
+
+msgid "Automatic adjustment"
+msgstr "Ajuste automático"
+
+msgid "Maximum speed"
+msgstr "Velocidade máxima"
+
+msgid "Manual adjustment"
+msgstr "Ajuste manual"
+
+msgid "Speed"
+msgstr "Velocidade"
+
+msgid "Apply"
+msgstr "Aplicar"
+
+msgid "Error: {}"
+msgstr "Erro: {}"
