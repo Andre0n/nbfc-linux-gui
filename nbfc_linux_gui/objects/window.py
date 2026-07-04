@@ -1,111 +1,196 @@
-import subprocess
-from subprocess import PIPE
+from gi.repository import Adw, Gdk, Gio, Gtk
 
-from gi.repository import Gtk
+from .. import nbfc
+from ..i18n import _
+from .fan_widget import FanWidget
+from .mode_selector import ModeSelector
 
-MAIN_BOX_PADDING = 16
-MAIN_BOX_SPACING = 10
+MAIN_BOX_PADDING = 18
+MAIN_BOX_SPACING = 14
+
+# Mode -> subtitle shown under the fan.
+_MODE_SUBTITLE = {
+    'auto': _('Automatic adjustment'),
+    'max': _('Maximum speed'),
+    'custom': _('Manual adjustment'),
+}
+
+CSS = """
+@define-color accent_bg_color #3584e4;
+@define-color accent_color #3584e4;
+@define-color accent_fg_color #ffffff;
+.apply-btn { padding-top: 8px; padding-bottom: 8px; font-weight: bold; }
+.mode-selector { border-radius: 8px; background: alpha(@window_fg_color, 0.08); }
+.mode-selector toggle { padding: 3px 4px; }
+.mode-selector toggle:checked { background: @accent_bg_color; color: @accent_fg_color; }
+"""
 
 
-class MainWindow(Gtk.ApplicationWindow):
+class MainWindow(Adw.ApplicationWindow):
 
     is_current_active = False
-    css_data = """
-    .speed-controls-label {
-        font-size: 24px;
-        font-weight: bold;
-    }
-    .custom-label {
-        font-size: 18px;
-    }
-
-    .switch {
-        cursor: pointer;
-    }
-    """
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.set_default_size(600, 400)
+        self.set_default_size(360, 480)
         self.set_resizable(False)
-        self.set_title('NoteBook FanControl GUI')
+        self.set_title(_('Fan Control'))
 
-        self.css_provider = Gtk.CssProvider()
-        self.css_provider.load_from_data(self.css_data.encode())
+        self._install_css()
 
-        # Main Box
-        self.main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.main_box.set_spacing(MAIN_BOX_SPACING)
-        self.main_box.set_margin_top(MAIN_BOX_PADDING)
-        self.main_box.set_margin_start(MAIN_BOX_PADDING)
-        self.main_box.set_margin_end(MAIN_BOX_PADDING)
-        self.set_child(self.main_box)
-
-        self.speed_controls_label = Gtk.Label(
-            label='Speed Controls', css_classes=['speed-controls-label']
+        self.main_box = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=MAIN_BOX_SPACING,
+            margin_top=MAIN_BOX_PADDING,
+            margin_bottom=MAIN_BOX_PADDING,
+            margin_start=MAIN_BOX_PADDING,
+            margin_end=MAIN_BOX_PADDING,
         )
-        self.speed_controls_label.set_halign(Gtk.Align.START)
-        self.speed_controls_label.get_style_context().add_provider(
-            self.css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+
+        toolbar = Adw.ToolbarView()
+        header = Adw.HeaderBar()
+        header.add_css_class('flat')
+        header.pack_start(self._build_menu_button())
+        toolbar.add_top_bar(header)
+        toolbar.set_content(self.main_box)
+        self.set_content(toolbar)
+
+        self._build_fan()
+
+        self.modes = ModeSelector(on_change=self._mode_changed)
+        self.modes.set_halign(Gtk.Align.FILL)
+        self.modes.set_hexpand(True)
+        self.main_box.append(self.modes)
+
+        self._build_slider()
+
+        self.apply_button = Gtk.Button(
+            label=_('Apply'),
+            css_classes=['suggested-action', 'apply-btn'],
+            hexpand=True,
         )
-        self.main_box.append(self.speed_controls_label)
+        self.apply_button.connect('clicked', self._apply)
+        self.main_box.append(self.apply_button)
 
-        self.current_speed_label = Gtk.Label(
-            label='Current Speed: system defined'
+        self.modes.set_mode('auto')
+        self._mode_changed('auto')
+        self.load_current_status()
+
+    def _build_menu_button(self):
+        """Hamburger menu (top-left) with an About entry."""
+        action = Gio.SimpleAction.new('about', None)
+        action.connect('activate', self._show_about)
+        self.add_action(action)
+
+        menu = Gio.Menu()
+        menu.append(_('About'), 'win.about')
+
+        return Gtk.MenuButton(
+            icon_name='open-menu-symbolic',
+            menu_model=menu,
+            tooltip_text=_('Main Menu'),
         )
-        self.current_speed_label.set_hexpand(True)
-        self.current_speed_label.set_halign(Gtk.Align.START)
-        self.current_speed_label.set_css_classes(['custom-label'])
-        self.current_speed_label.get_style_context().add_provider(
-            self.css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+
+    def _show_about(self, _action, _param):
+        about = Adw.AboutDialog(
+            application_name=_('Fan Control'),
+            application_icon='com.andredev.nbfc_gui',
+            developer_name='André Gabriel',
+            version='0.1.0',
+            comments=_('A frontend to nbfc-linux.'),
+            website='https://github.com/Andre0n/nbfc-linux-gui',
+            issue_url='https://github.com/Andre0n/nbfc-linux-gui/issues',
+            license_type=Gtk.License.LGPL_3_0,
+            copyright='© 2026 André Gabriel',
         )
-        self.main_box.append(self.current_speed_label)
+        about.present(self)
 
-        # Switch Automatic Fan Control
-        self.switch_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-        self.switch = Gtk.Switch()
-        self.switch.set_active(False)
-        self.switch_box.append(self.switch)
+    @staticmethod
+    def _install_css():
+        """Load app CSS once for the whole display, not per widget."""
+        provider = Gtk.CssProvider()
+        provider.load_from_data(CSS.encode())
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(), provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+        )
 
-        self.switch_label = Gtk.Label(label='Auto')
-        self.switch_box.append(self.switch_label)
-        self.switch_box.set_spacing(5)
+    def _build_fan(self):
+        self.fan = FanWidget()
+        self.fan.set_halign(Gtk.Align.CENTER)
+        self.main_box.append(self.fan)
 
-        self.main_box.append(self.switch_box)
+        # Subtitle under the fan: active mode / status / errors.
+        self.status_label = Gtk.Label(
+            css_classes=['dim-label', 'caption'],
+            halign=Gtk.Align.CENTER,
+        )
+        self.main_box.append(self.status_label)
 
-        # Speed Control Slider
+    def _build_slider(self):
+        row = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        row.append(Gtk.Label(label=_('Speed'), halign=Gtk.Align.START))
+        self.percent_label = Gtk.Label(
+            halign=Gtk.Align.END, hexpand=True,
+            css_classes=['numeric'],
+        )
+        row.append(self.percent_label)
+        self.main_box.append(row)
+
         self.slider = Gtk.Scale()
         self.slider.set_digits(0)
         self.slider.set_range(10, 100)
-        self.slider.set_draw_value(True)
+        self.slider.set_draw_value(False)
         self.slider.set_value(50)
-
+        self.slider.connect('value-changed', self._slider_changed)
         self.main_box.append(self.slider)
 
-        # Apply changes Button
-        self.apply_button = Gtk.Button(label='Apply')
-        self.apply_button.connect('clicked', self.apply_button_clicked)
-        self.main_box.append(self.apply_button)
+    def _slider_changed(self, scale):
+        value = scale.get_value()
+        self.fan.set_speed(value)
+        self.percent_label.set_label(f'{value:.0f}%')
 
-    def apply_button_clicked(self, _):
-        if self.switch.get_active():
-            if not self.is_current_active:
-                subprocess.Popen(
-                    ['pkexec', 'nbfc', 'set', '--auto'],
-                    stdout=PIPE,
-                    stderr=PIPE,
-                )
-                self.is_current_active = True
-                self.current_speed_label.set_label('Current Speed: auto')
+    def _mode_changed(self, mode):
+        """One mode active at a time. Slider only matters in Custom."""
+        self.slider.set_sensitive(mode == 'custom')
+        self.status_label.set_label(_MODE_SUBTITLE.get(mode, ''))
+        if mode == 'max':
+            speed = 100
+        elif mode == 'auto':
+            speed = 50            # auto: moderate preview spin
         else:
-            slider_value = str(self.slider.get_value())
-            subprocess.Popen(
-                ['pkexec', 'nbfc', 'set', '--speed', slider_value],
-                stdout=PIPE,
-                stderr=PIPE,
-            )
-            self.is_current_active = False
-            self.switch.set_active(False)
-            self.current_speed_label.set_label(
-                f'Current Speed: {slider_value}%'
-            )
+            speed = self.slider.get_value()
+        self.fan.set_speed(speed)
+        self.percent_label.set_label(f'{speed:.0f}%')
+
+    def load_current_status(self):
+        """Read current fan config from nbfc and reflect it in the UI."""
+        status = nbfc.status()
+        if status is None:
+            return  # nbfc unavailable: keep defaults
+
+        auto = status.get('Auto Control Enabled', '').lower() == 'true'
+        self.is_current_active = auto
+        self.modes.set_mode('auto' if auto else 'custom')
+
+        speed = status.get('Current Fan Speed') or status.get('Target Fan Speed')
+        if speed is not None:
+            try:
+                self.slider.set_value(float(speed))
+            except ValueError:
+                pass
+
+    def _apply(self, _button):
+        mode = self.modes.get_mode()
+        if mode == 'auto':
+            args = ['set', '--auto']
+        else:
+            speed = '100' if mode == 'max' else str(int(self.slider.get_value()))
+            args = ['set', '--speed', speed]
+
+        err = nbfc.apply(args)
+        if err:
+            self.status_label.set_label(_('Error: {}').format(err))
+            return
+        self.is_current_active = (mode == 'auto')
+        self.status_label.set_label(_MODE_SUBTITLE.get(mode, ''))
