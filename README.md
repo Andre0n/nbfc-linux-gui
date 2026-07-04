@@ -1,4 +1,8 @@
-# NoteBook FanControl GUI
+<p align="center">
+  <img src="docs/assets/icon-256.png" alt="Fan Control icon" width="96" height="96">
+</p>
+
+# Fan Control
 
 [Português do Brasil](README.pt-BR.md)
 
@@ -11,7 +15,7 @@ The app can:
 - Apply a manual fan speed percentage.
 - Read the current `nbfc` status when the application starts.
 
-![Screenshot of the application](/assets/main.png "Screenshot of the application")
+![Screenshot of the application](docs/assets/shot-main.png "Screenshot of the application")
 
 ## Requirements
 

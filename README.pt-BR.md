@@ -1,4 +1,8 @@
-# NoteBook FanControl GUI
+<p align="center">
+  <img src="docs/assets/icon-256.png" alt="Ícone do Fan Control" width="96" height="96">
+</p>
+
+# Fan Control
 
 [English](README.md)
 
@@ -11,7 +15,7 @@ O aplicativo permite:
 - Aplicar uma velocidade manual por porcentagem.
 - Ler o status atual do `nbfc` quando o aplicativo inicia.
 
-![Captura de tela do aplicativo](/assets/main.png "Captura de tela do aplicativo")
+![Captura de tela do aplicativo](docs/assets/shot-main.png "Captura de tela do aplicativo")
 
 ## Requisitos
 
