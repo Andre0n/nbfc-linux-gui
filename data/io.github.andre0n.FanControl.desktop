@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Fan Control
+Comment=A frontend to nbfc-linux
+Exec=nbfc_linux_gui
+Icon=io.github.andre0n.FanControl
+Terminal=false
+Type=Application
+Categories=Settings;HardwareSettings;
+Keywords=fan;cooling;temperature;nbfc;laptop;
+StartupNotify=true

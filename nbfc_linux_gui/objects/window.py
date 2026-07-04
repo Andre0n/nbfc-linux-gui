@@ -92,7 +92,7 @@ class MainWindow(Adw.ApplicationWindow):
     def _show_about(self, _action, _param):
         about = Adw.AboutDialog(
             application_name=_('Fan Control'),
-            application_icon='com.andredev.nbfc_gui',
+            application_icon='io.github.andre0n.FanControl',
             developer_name='André Gabriel',
             version='0.1.0',
             comments=_('A frontend to nbfc-linux.'),

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.andre0n.FanControl</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>LGPL-3.0-or-later</project_license>
+
+  <name>Fan Control</name>
+  <summary>Control your laptop fan speed</summary>
+
+  <description>
+    <p>
+      A simple GTK frontend for nbfc-linux. Switch between automatic, maximum
+      and manual fan modes, set a custom speed with a slider, and watch the
+      current speed on an animated fan gauge.
+    </p>
+    <p>Requires nbfc-linux installed and its service running on the host.</p>
+  </description>
+
+  <launchable type="desktop-id">io.github.andre0n.FanControl.desktop</launchable>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/Andre0n/nbfc-linux-gui/main/assets/main.png</image>
+      <caption>Main window</caption>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">https://github.com/Andre0n/nbfc-linux-gui</url>
+  <url type="bugtracker">https://github.com/Andre0n/nbfc-linux-gui/issues</url>
+
+  <developer id="io.github.andre0n">
+    <name>André Gabriel</name>
+  </developer>
+
+  <content_rating type="oars-1.1"/>
+
+  <releases>
+    <release version="0.1.0" date="2026-07-04">
+      <description>
+        <p>Initial release.</p>
+      </description>
+    </release>
+  </releases>
+</component>

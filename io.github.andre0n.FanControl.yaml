@@ -1,0 +1,30 @@
+id: io.github.andre0n.FanControl
+runtime: org.gnome.Platform
+runtime-version: '48'
+sdk: org.gnome.Sdk
+command: nbfc_linux_gui
+
+finish-args:
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --share=ipc
+  # nbfc and pkexec live on the host; reach them via flatpak-spawn --host.
+  - --talk-name=org.freedesktop.Flatpak
+
+modules:
+  - name: nbfc-linux-gui
+    buildsystem: simple
+    build-commands:
+      # App is pure Python on the runtime's GTK4/libadwaita/PyGObject. No pip.
+      - mkdir -p /app/share/nbfc_linux_gui
+      - cp -r nbfc_linux_gui /app/share/nbfc_linux_gui/
+      - install -Dm755 flatpak/nbfc-gui-launcher.sh /app/bin/nbfc_linux_gui
+      - install -Dm644 data/io.github.andre0n.FanControl.desktop
+          /app/share/applications/io.github.andre0n.FanControl.desktop
+      - install -Dm644 data/io.github.andre0n.FanControl.metainfo.xml
+          /app/share/metainfo/io.github.andre0n.FanControl.metainfo.xml
+      # Install into the system icon theme so the desktop-menu entry gets an icon.
+      - cp -r nbfc_linux_gui/data/icons/hicolor /app/share/icons/
+    sources:
+      - type: dir
+        path: .
