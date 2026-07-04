@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+    content="Fan Control e uma interface GTK nativa para ajustar a ventoinha no Linux usando nbfc-linux.">
+  <title>Fan Control</title>
+  <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cantarell:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+  <nav class="site-nav" aria-label="Principal">
+    <a class="brand" href="#top" aria-label="Fan Control">
+      <img src="./assets/icon-256.png" alt="" width="34" height="34">
+      <span>Fan Control</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Recursos</a>
+      <a href="#modes">Modos</a>
+      <a href="#install">Instalar</a>
+      <a class="button button-small" href="#install">Baixar</a>
+    </div>
+  </nav>
+
+  <main id="top">
+    <header class="hero section-grid">
+      <div class="hero-copy">
+        <p class="badge"><span></span>GTK 4 / libadwaita</p>
+        <h1>Ajuste a ventoinha pelo desktop.</h1>
+        <p class="hero-text">
+          Um app nativo para definir a velocidade do ventilador. Automático,
+          máximo ou manual, como você preferir.
+        </p>
+        <div class="actions">
+          <a class="button" href="#install">
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M8 1v9M4 6.5l4 4 4-4M2.5 13.5h11" />
+            </svg>
+            Baixar
+          </a>
+          <a class="button button-secondary" href="https://github.com/Andre0n/nbfc-linux-gui">
+            <svg class="fill-icon" viewBox="0 0 16 16" aria-hidden="true">
+              <path
+                d="M8 .2a8 8 0 0 0-2.5 15.6c.4.07.55-.17.55-.38l-.01-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.71 1.23 1.87.87 2.33.67.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.83-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.52.56.83 1.28.83 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48l-.01 2.2c0 .21.15.46.55.38A8 8 0 0 0 8 .2z" />
+            </svg>
+            Código-fonte
+          </a>
+        </div>
+        <ul class="trust-list" aria-label="Resumo">
+          <li>Software livre</li>
+          <li>Sem telemetria</li>
+          <li>~2 MB</li>
+        </ul>
+      </div>
+      <div class="shot-wrap">
+        <img class="hero-shot" src="./assets/shot-main.png" alt="Janela principal do Fan Control">
+      </div>
+    </header>
+
+    <section class="features" id="features">
+      <div class="section-heading">
+        <p>Recursos</p>
+        <h2>O que ele faz</h2>
+      </div>
+      <div class="cards">
+        <article class="card">
+          <div class="icon-box">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 2v4M12 18v4M2 12h4M18 12h4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M19.1 4.9l-2.8 2.8M7.7 16.3l-2.8 2.8" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </div>
+          <h3>App nativo</h3>
+          <p>Construído em GTK 4 e libadwaita. Segue o tema do sistema e os atalhos do GNOME.</p>
+        </article>
+        <article class="card">
+          <div class="icon-box">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z" />
+            </svg>
+          </div>
+          <h3>Aplica na hora</h3>
+          <p>Mova o slider e clique em Aplicar. A velocidade muda sem passar pelo terminal.</p>
+        </article>
+        <article class="card">
+          <div class="icon-box">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <h3>Leve</h3>
+          <p>Cerca de 2 MB, sem serviços em segundo plano e sem telemetria.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="modes section-grid" id="modes">
+      <div class="shot-wrap shot-wrap-small">
+        <img src="./assets/shot-about.png" alt="Tela sobre do Fan Control">
+      </div>
+      <div>
+        <p class="eyebrow">Três modos</p>
+        <h2>Automático, máximo ou manual</h2>
+        <div class="mode-list">
+          <article>
+            <span>A</span>
+            <div>
+              <h3>Automático</h3>
+              <p>O sistema ajusta a velocidade conforme a temperatura.</p>
+            </div>
+          </article>
+          <article>
+            <span>M</span>
+            <div>
+              <h3>Máximo</h3>
+              <p>Coloca o ventilador em 100%.</p>
+            </div>
+          </article>
+          <article>
+            <span>⟡</span>
+            <div>
+              <h3>Manual</h3>
+              <p>Você escolhe a porcentagem no slider e o app mantém esse valor.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="install" id="install">
+      <img src="./assets/icon-256.png" alt="" width="64" height="64">
+      <h2>Instalar</h2>
+      <p>Disponível para as principais distribuições Linux.</p>
+      <div class="command" role="group" aria-label="Comando de instalação">
+        <span aria-hidden="true">$</span>
+        <code>flatpak install flathub io.github.andre0n.FanControl</code>
+        <button type="button" data-copy="flatpak install flathub io.github.andre0n.FanControl"
+          aria-label="Copiar comando">
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <rect x="5" y="5" width="8" height="8" rx="1.5" />
+            <path d="M3 11V4a1 1 0 0 1 1-1h6" />
+          </svg>
+        </button>
+      </div>
+      <div class="actions actions-center">
+        <a class="button" href="#">Flathub</a>
+        <!-- <a class="button button-secondary" href="#">.deb / .rpm</a> -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <img src="./assets/icon-256.png" alt="" width="26" height="26">
+      <span>Fan Control · v0.1.0 · por André Gabriel</span>
+    </div>
+    <nav aria-label="Rodape">
+      <a href="https://github.com/Andre0n/nbfc-linux-gui">Detalhes</a>
+      <a href="https://github.com/Andre0n/nbfc-linux-gui/issues">Reportar problema</a>
+      <a href="https://github.com/Andre0n/nbfc-linux-gui/blob/main/LICENSE">Licença</a>
+    </nav>
+  </footer>
+
+  <script src="./script.js"></script>
+</body>
+
+</html>
